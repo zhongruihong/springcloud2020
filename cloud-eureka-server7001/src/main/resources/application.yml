@@ -1,0 +1,8 @@
+server:
+  port: 7001 #eureka注册中心端口默认是8761
+  
+eureka:  instance:    hostname: localhost #eureka实例名称，windows可以通过修改hosts【c:\windows\system32\drivers\etc】文件进行映射！
+  client:    register-with-eureka: false #不向服务中心注册自己
+    fetch-registry: false #false表示 自己就是注册中心！不需要去检索服务
+    service-url:
+      #设置与eureka server（本项目就是注册中心）交互的地址，查询服务和注册服务都依赖该地址      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
