@@ -1,9 +1,12 @@
-##ignorethisfile##
+##ignore these files##
 /target/
-.classpath
-.project
-.settings
-.MF
+*.classpath
+*.project
+*.settings
+*.MF
+*.yml
+*.xml
+*.properties
 ##filterdatabfile、slnfile##
 *.mdb
 *.ldb
