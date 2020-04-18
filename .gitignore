@@ -4,8 +4,6 @@
 *.project
 *.settings
 *.MF
-*.yml
-*.xml
 *.properties
 *.lst
 ##filterdatabfile、slnfile##
