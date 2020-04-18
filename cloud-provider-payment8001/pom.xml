@@ -10,6 +10,12 @@
 	<artifactId>cloud-provider-payment8001</artifactId>
 	<!-- 引入jar -->
 	<dependencies>
+		<!-- 自定义公共包，主要放公用实体等 -->
+		<dependency>
+			<groupId>com.rui.springcloud</groupId>
+			<artifactId>cloud-api-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
