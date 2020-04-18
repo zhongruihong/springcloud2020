@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.rui.springcloud.mapper.PaymentMapper">
+
+	<insert id ="create" parameterType = "Payment" useGeneratedKeys = "false" keyProperty ="id" >
+		<!-- (1)因为在application.xml下配置了所有entity别名类所在的包路径【type-aliases-package】，所以此处不用写类的全路径 
+		(2)useGeneratedKeys 要求数据库本身具备主键自动增长的功能，mysql，sqlserver可以使用useGeneratedKeys =true 这功能，
+		oracle不支持useGeneratedKeys，所以ORACLE是不能使用useGeneratedKeys =true的。
+		oracle要把insert属性里的useGeneratedKeys的属性设置为false就可以成功插入数据了，
+		如果oracle要实现主键自增，可以在oracle中写sequence和trigger，insert前触发，利用seq给id自增赋值
+		(3)此处的数据库主键"id"与实体字段id对应 -->
+		INSERT INTO payment(serial) VALUES(#{serial})
+	</insert>
+	
+	<resultMap id ="BaseResultMap" type = "com.rui.springcloud.entity.Payment">
+		<id  column = "id" property ="id" jdbcType="INTEGER"/><!-- mysql此处是bigint -->
+		<id column ="serial" property ="serial" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id ="getPaymentById" parameterType="Long" resultMap = "BaseResultMap">
+		SELECT * FROM payment WHERE ID =#{id}
+	</select>
+</mapper>

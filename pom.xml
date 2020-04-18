@@ -38,6 +38,7 @@
 		<log4j.version>1.2.17</log4j.version>
 		<lombok.version>1.16.18</lombok.version>
 		<mysql.version>5.1.47</mysql.version>
+		<oracle.version>0.0.1-SNAPSHOT</oracle.version><!-- 自己导入本地maven仓库定义的 -->
 		<druid.version>1.1.16</druid.version>
 		<mybatis.spring.boot.version>1.3.0</mybatis.spring.boot.version>
 		<spring.boot.version>2.2.2.RELEASE</spring.boot.version>
@@ -82,6 +83,15 @@
 				<artifactId>mysql-connection</artifactId>
 				<version>${druid.version}</version>
 			</dependency>
+			<!-- oracle -->
+			<!-- 由于Oracle授权问题，Maven3不提供Oracle JDBC driver，为了在Maven项目中应用Oracle JDBC driver,必须手动添加到本地仓库。 
+			解决方法：将本地下载好的（或者本地安装的Oracle里面自带的），导入到本地Maven的仓库目录，这样就可以使用了。
+			-->
+			<dependency>
+				<groupId>com.oracle</groupId>
+				<artifactId>ojdbc6</artifactId>
+				<version>${oracle.version}</version>
+			</dependency>
 			<!-- mybatis -->
 			<dependency>
 				<groupId>org.mybatis.spring.boot</groupId>
@@ -105,9 +115,11 @@
 	</dependencyManagement>
 	<modules>
 		<module>cloud-provider-payment8001</module>
+		<module>cloud-consumer-order80</module>
 	</modules>
 
 	<build>
+		<finalName>自己工程的名字</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
