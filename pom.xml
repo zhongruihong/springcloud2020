@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.rui.springcloud</groupId>
+	<artifactId>spingcloud2020</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging><!-- maven聚合、依赖、继承、传递依赖 -->
+	<!-- 微服务架构 : 约定>配置>编码  以下步骤形成肌肉记忆！
+	 1、建module：父工程右键->New->Maven Module;父工程pom.xml出现<modules><module> 
+		此时，子项目只有artifactId，无groupId和version 
+	2、改 pom[module] 
+	<dependencies> 
+		<dependency> 
+			<groupId></groupId> 
+			<artifactId></artifactId> 
+			<version></version> 
+		</dependency> 
+	</dependencies> 
+	3、写yml 
+		服务端口
+		应用名称
+		数据源(type、驱动、url、用户名、密码)
+		mybatis(xml和别名类所在包路径)
+	4、主启动 
+		@SpringBootApplication
+	5、业务类 
+		vue->json<-controller-service-dao-[mysql|oracle...]
+		规范
+	-->
+	
+	<!-- 通过统一版本 jar包和版本号 -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<junit.version>4.12</junit.version>
+		<log4j.version>1.2.17</log4j.version>
+		<lombok.version>1.16.18</lombok.version>
+		<mysql.version>5.1.47</mysql.version>
+		<druid.version>1.1.16</druid.version>
+		<mybatis.spring.boot.version>1.3.0</mybatis.spring.boot.version>
+		<spring.boot.version>2.2.2.RELEASE</spring.boot.version>
+		<spring.cloud.version>Hoxton.SR1</spring.cloud.version>
+		<spring.cloud.alibaba.version>2.1.0.RELEASE</spring.cloud.alibaba.version>
+	</properties>
+	<!-- dependencyManageMent元素提供一种管理依赖版本号的方式 通常在一个组织或者项目的最顶层的父pom中，它能让所有在子项目中引用一个依赖，而不用显式的列出版本号。 
+		maven会沿着父子层次向上走，直到找到一个拥有dependencyManagement元素的项目，然后它就会使用这个元素中指定的版本号。 子模块继承之后 
+		，提供作用: 锁定版本，子模块不用指定版本号，即不用写version，gav和父类相同 如果子项目需要另外使用一个版本，自己声明version即可。 
+		一次修改，处处申明。 注意：该元素只是【声明依赖】，【并不实现引入】 ，子项目需要的【显示声明】需要用的依赖(g、a) 如果子项目中不声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本号， 
+		才会从父项目中继承该项，并且version和scope都读取自父pom -->
+	<!-- 父工程创建完成后可以执行项目右键->Run as->Maven:install 将父工程发布到仓库，方便子工程继承 。清除则Run as->Maven:clean -->
+	<dependencyManagement><!--聚合方式下依赖管理，父项目中才使用该元素！ -->
+		<dependencies>
+			<!-- spring boot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- spring cloud -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring.cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- spring cloud alibaba -->
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${spring.cloud.alibaba.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- mysql -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connection</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
+			<!-- mybatis -->
+			<dependency>
+				<groupId>org.mybatis.spring.boot</groupId>
+				<artifactId>mybatis-spring-boot-starter</artifactId>
+				<version>${mybatis.spring.boot.version}</version>
+			</dependency>
+			<!-- junit -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<!-- lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<optional>true</optional>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>cloud-provider-payment8001</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!-- <source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<encoding>${project.build.sourceEncoding}</encoding> -->
+					<fork>true</fork>
+					<addResources>true</addResources>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
