@@ -4,11 +4,11 @@
 #默认每隔30秒更新一次服务调用地址
 #RPC远程服务核心：高可用->注册中心集群：负载均衡、故障容错
 server:
-  port: 7001 #eureka注册中心端口默认是8761
+  port: 7002 #eureka注册中心端口默认是8761
   
-eureka:  instance:    hostname: eureka1.rui.com #eureka实例名称，除localhost外，windows可以通过修改hosts【c:\windows\system32\drivers\etc】文件进行映射！
+eureka:  instance:    hostname: eureka2.rui.com #eureka实例名称，除localhost外，windows可以通过修改hosts【c:\windows\system32\drivers\etc】文件进行映射！
   client:    register-with-eureka: false #false 不向服务中心注册自己
     fetch-registry: false #false 表示 自己就是注册中心！不需要去检索服务
     service-url:
-      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defaultZone: http://eureka2.rui.com:${server.port}/eureka/ #集群相互注册
+      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defaultZone: http://eureka1.rui.com:${server.port}/eureka/ #集群相互注册
       #浏览器访问：http://eureka2.rui.com:7001/   http://eureka2.rui.com:7002/ http://eureka1.rui.com:7001/   http://eureka1.rui.com:7002/

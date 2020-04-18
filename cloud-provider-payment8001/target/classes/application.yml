@@ -3,8 +3,8 @@ server:
   
 eureka:  client:    register-with-eureka: true #将自己【服务提供者】注册进eureka server
     fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
-    service-url:      defaultZone: http://localhost:7001/eureka #注册地址
-
+    service-url:      #defaultZone: http://localhost:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
 spring:
   application:
     name: cloud-payment-service #注册到注册中心的应用名称【application】
