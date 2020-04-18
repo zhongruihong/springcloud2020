@@ -1,16 +1,24 @@
 server:
   port: 8001
+  
+eureka:  client:    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:      defaultZone: http://localhost:7001/eureka #注册地址
 
 spring:
   application:
-    name: cloud-payment-service
+    name: cloud-payment-service #注册到注册中心的应用名称【application】
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource #德鲁伊
-    driver-class-name: org.gjt.mm.mysql.Driver
-    url: jdbc:mysql://localhost:3306/db_springcloud?useUnicode=true?characterEncoding=utf-8&useSSL=false #5.7以后mysql安全加强，url要加上useSSL=false，可能报错
-    username: root
-    password: 123456
+#    driver-class-name: org.gjt.mm.mysql.Driver
+#    url: jdbc:mysql://localhost:3306/db_springcloud?useUnicode=true?characterEncoding=utf-8&useSSL=false #5.7以后mysql安全加强，url要加上useSSL=false，可能报错
+#    username: root
+#    password: 123456
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: scott
+    password: scott
 
 mybatis:
   mapperLocations: classpath:mapper/*.xml  #所有mapper的xml文件在类路径的mapper文件夹下
-  type-aliases-package: com.rui.springcloud.entities #所有entity别名类所在包
+  type-aliases-package: com.rui.springcloud.entity #所有entity别名类所在包

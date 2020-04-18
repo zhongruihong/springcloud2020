@@ -10,6 +10,11 @@
 	<artifactId>cloud-provider-payment8001</artifactId>
 	<!-- 引入jar -->
 	<dependencies>
+		<!-- eureka client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 		<!-- 自定义公共包，主要放公用实体等 -->
 		<dependency>
 			<groupId>com.rui.springcloud</groupId>
