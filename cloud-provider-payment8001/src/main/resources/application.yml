@@ -7,7 +7,7 @@ eureka:  client:    register-with-eureka: true #将自己【服务提供者】
       defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
 spring:
   application:
-    name: cloud-payment-service #注册到注册中心的应用名称【application】
+    name: cloud-payment-service #注册到注册中心的应用名称【application】对外显露调用， 在相同应用名称下可能有多个实际应用提供，可通过访问注册中心查看
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource #德鲁伊
 #    driver-class-name: org.gjt.mm.mysql.Driver

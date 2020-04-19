@@ -24,7 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Slf4j
 public class OrderController {
-	public static final String PAYMENT_URL = "http://localhost:8001";//暂时使用固定的服务地址
+	//public static final String PAYMENT_URL = "http://localhost:8001";//单机版暂时使用固定的服务地址
+	public static final String PAYMENT_URL ="http://cloud-payment-service";//（服务名称大小写都可以吗?）集群版使用服务调用访问时，只认在注册中心对外显露注册的服务名称(spring.application.name值)，与ip和端口号无关
 	@Resource//在Config中配置，再在此注入
 	private RestTemplate restTemplate;//使用RestTemplate进行rest风格的服务调用
 	@GetMapping(value="/consumer/payment/create")//消费者无需知道端口，默认80，postman模拟get请求：http://localhost/consumer/payment/create?serial=zrh

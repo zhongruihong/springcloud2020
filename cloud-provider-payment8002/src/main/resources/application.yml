@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8002
   
 eureka:  client:    register-with-eureka: true #将自己【服务提供者】注册进eureka server
     fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
