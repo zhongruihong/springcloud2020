@@ -27,7 +27,9 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<!-- actuator -->
-		<!-- 和web永远绑一起，actuator涉及后面的图形化显示、坐标监控、图形处理 -->
+		<!-- 和web永远绑一起，actuator涉及后面的图形化显示、坐标监控、图形处理、IP信息显示（如注册中心鼠标悬浮应用的status时，左下角显示ip） 、
+		服务健康检查：访问http://服务ip:端口号/actuator/health，可查看应用状态 ，返回json，如{"status":"UP"}
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>

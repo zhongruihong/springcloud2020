@@ -5,6 +5,8 @@ eureka:  client:    register-with-eureka: true #将自己【服务提供者】
     fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
     service-url:      #defaultZone: http://localhost:7001/eureka #单机版 注册地址 
       defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:    instance-id: payment8001 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
 spring:
   application:
     name: cloud-payment-service #注册到注册中心的应用名称【application】对外显露调用， 在相同应用名称下可能有多个实际应用提供，可通过访问注册中心查看
