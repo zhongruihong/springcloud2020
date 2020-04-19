@@ -7,7 +7,15 @@
 #即某时刻某一个服务不可用，Eureka不会立刻清理，依旧会对其信息进行保护，属于CAP中的AP
 #默认情况下，EurekaClient定时（30秒）向EurekaServer发送心跳包
 #一定时间（默认90秒）没有收到心跳包，会直接从服务注册表中剔除该服务
-#禁止自我保护：
+#CAP
+#Consistency 强一致性
+#Availability 可用性
+#Pratition tolerance 分区容错性
+#只能满足其二
+#Eureka  Consul  Zookepper
+#AP        CP       CP 
+
+
 server:
   port: 7001 #eureka注册中心端口默认是8761
   
