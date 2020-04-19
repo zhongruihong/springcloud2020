@@ -18,7 +18,27 @@ import lombok.extern.slf4j.Slf4j;
  * 是一各简单便捷的访问restful服务模板类，是spring提供的用于访问Rest服务的客户端模拟 工具集
  * RestTemplate Api:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/client/RestTemplate.html
  * 采用注解方式依赖注入，进行配置
+ * 
  * @author zrh
+ *
+ * Ribbon是客户端负载均衡工具，主要提供客户端的软件负载均衡算法和服务调用，如连接超时、重试等。
+ * 在配置文件中列出Load Balancer后面所有的机器 ，Ribbon会自动基于某种规则(如简单轮询、随机连接)去连接这些机器 ，
+ * 使用Ribbon可以实现自定义的负载均衡算法，配合RestTemplate实现远程调用。
+ * Ribbon是一个软负载均衡的客户端组件，可以和其他所需请求的客户端结合使用，和eureka的结合就是其中一个实例。新版的eureka client中已经整合了ribbon，可通过pom.xml的Dependency Hierarchy查看
+ * 
+ * 
+ * Ribbon工作步骤：
+ * 1、选择EurekaServer:优先选择在同一个区域内负载较少的server;
+ * 2、再根据用户指定策略，从server取到的【服务列表】中选择一个地址
+ * Ribbon提供7种?【策略】：轮询 、随机、响应时间加权....
+ * 
+ * 
+ * Ribbon本地负载均衡和Nginx服务端负载均衡区别:
+ * 		Nginx是服务器负载均衡，客户端所有请求会交给Nginx，由其实现转发请求，即负载均衡由服务端 实现
+ * 		Ribbon本地负载均衡，在调用微服务接口时，会在注册中心上获取注册信息服务列表之后 缓存到JVM本地，从而在本地实现RPC远程服务调用！
+ * 		Ribbon属于进程内的load balance 它只是一个类库，集成消费端进程
+ * Ribbon目前已经进入维护(Maintenance)阶段，但依然大量使用，未来可以使用Spring Cloud LoadBalance替代
+ *
  *
  */
 @RestController

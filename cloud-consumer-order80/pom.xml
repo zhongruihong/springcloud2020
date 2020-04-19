@@ -12,6 +12,7 @@
 		<!-- 消费者也是一种eureka客户端 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
+			<!-- 新版的eureka client中已经整合了ribbon -->
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<!-- 自定义公共包，主要放公用实体等 -->
