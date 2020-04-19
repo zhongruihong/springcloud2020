@@ -13,7 +13,7 @@ import com.netflix.loadbalancer.WeightedResponseTimeRule;
 import com.netflix.loadbalancer.ZoneAvoidanceRule;
 /**
  * 自定义Ribbon负载策略
- * 要在启动类上加上@RibbonClients
+ * 同时要在启动类上加上@RibbonClient(name="",configuration=)配置才起作用！
  * @author zrh
  *
  */

@@ -1,3 +1,18 @@
+#客户端负载均衡【轮询算法】公式：
+# rest接口第n次请求数%服务器集群总数量（如8001 8002为2台） = 实际调用服务器位置下标
+# list[0] instances = 127.0.0.1:8001; 
+# list[1] instances = 127.0.0.1:8002; 
+# list = 2 instances
+# 1%2 = 1,index = 1 list.get(index)：127.0.0.1:8002;
+# 2%2 = 0,index = 0 list.get(index)：127.0.0.1:8001;
+# 3%2 = 1,index = 1 list.get(index)：127.0.0.1:8002;
+# 4%2 = 0,index = 0 list.get(index)：127.0.0.1:8001;
+#...
+# 3台、4台，...，n台集群，同理
+#本质就是取余！
+
+#每次服务重启后rest接口计数从1开始 
+#
 server:
   port: 80
 
