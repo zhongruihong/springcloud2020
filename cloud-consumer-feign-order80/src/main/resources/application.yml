@@ -1,0 +1,35 @@
+#Feign是一个声明式的WebService客户端，使用方法是【定义一个服务接口然后在上面添加注解：启动类上@EnableFeignClients，接口类上@FeignClient】
+#Spring Cloud对Feign进行了封装，使其支持Spring MVC标准注解和HttpMessageConverters
+#Feign可以与Eureka和Ribbon组合使用
+
+#Feign与Ribbon区别与联系
+#Feign旨在使编写Java Http客户端更容易
+#前面使用Ribbon+RestTemplate，利用RestTemplate对http请求的封装处理，形成模板化调用方法。
+#但在实际开发中，由于对服务依赖的调用可能不止一处，往往在一个接口处会被处调用，所以通常会针对每个微服务自行
+#封装一些客户端来包装这些依赖服务的调用。所以Feign在此基础上做了进一步封装。由它来定义和依赖服务接口的定义。
+#Feign【集成了Ribbon（也实现了客户端的负载均衡）】,只需要定义服务【绑定接口】且以声明式方法，简单优雅实现服务调用
+#实现Feign定义的接口到服务提供方接口的【一一配对】，从而【对外暴露】，实现面向【接口编程】
+
+#Feign和OpenFeign的区别和联系
+#Feign(spring-cloud-stater-feign)是cloud组件 中一个轻量级RESTful的HTTP服务客户端 ，其内置了Ribbon用来做客户端负载均衡。
+#Feign使用方式：使用Feign的注解定义接口，调用这个接口就可以调用服务注册中的服务
+#OpenFeign(spring-cloud-stater-openfeign)是cloud在Feign的基础上支持了SpringMVC注解如@RequestMappring等。
+#OpenFeign的@FeignClient可以解析SpringMVC的@RequestMapping注解下的接口，并通过动态代理的方式产生实现类，实现类中做负载均衡并调用其他服务
+
+#业务逻辑接口+@FeignClient配置调用provider服务
+
+server:
+  port: 80
+
+spring:  application:    name: cloud-order-service
+
+eureka:
+  client:
+    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:
+      #defaultZone: http://localhost:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:
+    instance-id: order80 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址

@@ -18,7 +18,7 @@ public class LoadBalancerImpl implements LoadBalancer{
 	//高并发的情况下，i++无法保证原子性，往往会出现问题，所以引入AtomicInteger类。
 	private AtomicInteger atomicInteger = new AtomicInteger(0);
 
-	public final int getAndIncreacement() {
+	private final int getAndIncreacement() {
 		int current;
 		int next;//next代表第几次访问
 		do {// 自旋锁
