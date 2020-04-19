@@ -17,4 +17,6 @@ public interface PaymentFeignService {
 	CommonResult<Payment>getPaymentById(@PathVariable("id")Long id) ;
 	//feign接口，通过provider服务对外暴露的【服务名】（"cloud-payment-service"）和【地址】("/payment/get/{id}")，进而去注册中心调用【对应的】provider服务
 
+	@GetMapping(value = "/payment/feign/timeout")
+	public String paymentFeignTimeout();
 }

@@ -33,3 +33,9 @@ eureka:
   instance:
     instance-id: order80 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
     prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
+#消费方去调服务提供方时，服务方业务处理有时间差，会超时报错。约定业务调用时间
+#设置Feign客户端超时时间（openfeign默认支持ribbon）
+ribbon:
+#没有这两个 属性的自动提示！
+  ReadTimeout: 5000 #建立连接所用的时间，适用于网络情况正常时，两端连接所用时间 5秒
+  ConnectTimeout: 5000 #建立连接后从服务端读取到可用资源所用的时间 5秒

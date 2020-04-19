@@ -1,6 +1,7 @@
 package com.rui.springcloud.controller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
@@ -67,6 +68,17 @@ public class PaymentController {
 	//用于模拟自定义负载均衡调用
 	@GetMapping(value = "/payment/mylb")
 	public String getPaymentLB() {
+		return port;
+	}
+	//模拟消费端调用服务提供才超时报错
+	@GetMapping(value = "/payment/feign/timeout")//对外暴露的rest风格地址，Feign客户端调用
+	public String paymentFeignTimeout() {
+		try {
+			//模拟服务提供者复杂业务处理要用时3秒钟  
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return port;
 	}
 }

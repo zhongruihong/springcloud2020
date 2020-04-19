@@ -22,7 +22,13 @@ public class OrderFeignController {
 	@GetMapping(value = "/consumer/payment/get/{id}")//rest风格  浏览器直接访问：http://localhost/consumer/payment/get/4
 	public CommonResult<Payment>getPaymentById(@PathVariable("id")Long id) {
 		log.info("【feign客户端】开始get请求");
-		//相当于又封装了一层，通过feign客户端接口，利用provider服务对外暴露的【服务名】和【地址】，进而去注册中心调用【对应的】provider服务
+		//相当于又封装了一层，通过feign客户端接口，利用provider服务对外暴露的【服务名（sping.application.name）】和【地址（controller层）】，进而去注册中心调用【对应的】provider服务
 		return paymentFeignService.getPaymentById(id);
+	}
+
+	@GetMapping(value = "/payment/feign/timeout")
+	public String paymentFeignTimeout() {
+		//openfeign-ribbon 客户端一般默认等待1秒钟，如果服务端处理业务超过1秒钟， 超过会报错：status 404 reading PaymentFeignService#paymentFeignTimeout()
+		return paymentFeignService.paymentFeignTimeout();
 	}
 }
