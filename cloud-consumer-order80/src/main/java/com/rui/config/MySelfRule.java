@@ -1,5 +1,7 @@
 package com.rui.config;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,7 +34,7 @@ public class MySelfRule {//注意，类名不要和下面方法名mySelf()一样
 		 * RandomRule 随机
 		 * ZoneAvoidanceRule 默认规则 ，复合判断server所在区域的性能和server的可用性选择服务
 		 */
-		//IRule是Ribbon的核心组件
+		//IRule是Ribbon的核心组件。采用策略模式?适配器模式?
 		@Bean // for ribbon also for feign: because feign has integrateed ribbon and eureka
 		public IRule myRule() {
 			  new RetryRule();
@@ -43,4 +45,16 @@ public class MySelfRule {//注意，类名不要和下面方法名mySelf()一样
 			  new ZoneAvoidanceRule();
 			return  new RandomRule();
 		}
+		/** 轮询算法中使用的自旋锁
+		private int incrementAndGetModulo(int modulo) {
+			for (;;) {
+				int current = nextServerCyclicCounter.get();//初始nextServerCyclicCounter = new AtomicInteger(0); //原子整形类
+				int next = (current + 1) % modulo;
+				if (nextServerCyclicCounter.compareAndSet(current, next))// cas(compare and swap)+自旋锁 操作后会判断内存值是否跟预期值一致，是则替换
+					return next;
+			}
+		}
+		*/
+		
+		 
 }
