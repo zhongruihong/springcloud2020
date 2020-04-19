@@ -10,5 +10,5 @@ eureka:  instance:    hostname: eureka1.rui.com #eureka实例名称，除local
   client:    register-with-eureka: false #false 不向服务中心注册自己
     fetch-registry: false #false 表示 自己就是注册中心！不需要去检索服务
     service-url:
-      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defaultZone: http://eureka2.rui.com:${server.port}/eureka/ #集群相互注册
+      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defaultZone: http://eureka2.rui.com:7002/eureka/ #集群相互注册
       #浏览器访问：http://eureka2.rui.com:7001/   http://eureka2.rui.com:7002/ http://eureka1.rui.com:7001/   http://eureka1.rui.com:7002/

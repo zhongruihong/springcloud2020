@@ -1,8 +1,12 @@
 package com.rui.springcloud.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class PaymentController {
 	@Value("${server.port}")//@Value("${xxx.xx}")获取application.yml中配置的端口号，通过服务对应的端口号，看是具体调用的哪个服务
 	private String port;
+	@Value("${spring.application.name}")
+	private String serviceId;
+	@Resource
+	private DiscoveryClient discoveryClient;//注册进注册中心后，服务自己的基础信息。对于注册进eureka里面的服务，可以通过服务发现来获得该服务的信息
+
 	@Resource
 	private PaymentService service;
 	@PostMapping(value = "/payment/create")//rest风格 浏览器直接访问发送的是get请求,所以用postman模拟post请求： http://localhost:8001/payment/create?serial=zrh
@@ -41,5 +50,17 @@ public class PaymentController {
 		}else {
 			return new CommonResult<Payment>(444,"无记录，调用端口："+port,null);
 		}
+	}
+	@GetMapping(value="/payment/discovery")//  http://localhost:8001/payment/discovery
+	public Object discovery() {
+		List<String> services = discoveryClient.getServices();//获取的是所有已经注册进注册中心的应用的名称
+		for (String service : services) {
+			log.info(service);
+		}
+		List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);//获取服务名称下的所有服务，serviceId是对外显露的应用名称
+		for (ServiceInstance instance : instances) {
+			log.info(instance.getHost()+"\t"+instance.getInstanceId()+"\t"+instance.getUri());//ip【对外！】 应用名称  url
+		}
+		return this.discoveryClient;
 	}
 }
