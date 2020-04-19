@@ -1,7 +1,13 @@
 package com.rui.springcloud.controller;
 
+import java.net.URI;
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.rui.springcloud.entity.CommonResult;
 import com.rui.springcloud.entity.Payment;
+import com.rui.springcloud.loadbalance.LoadBalancer;
 
 import lombok.extern.slf4j.Slf4j;
 /**
@@ -48,9 +55,11 @@ public class OrderController {
 	//public static final String PAYMENT_URL = "http://localhost:8001";//单机版暂时使用固定的服务地址
 	public static final String PAYMENT_URL ="http://cloud-payment-service";//（服务名称大小写都可以吗?）集群版使用服务调用访问时，只认在注册中心对外显露注册的服务名称(spring.application.name值)，与ip和端口号无关
 	@Resource//在Config中配置，再在此注入
-	
 	private RestTemplate restTemplate;//使用RestTemplate进行rest风格的服务调用
-	
+	@Resource//手写负载均衡算法，引入负载均衡接口
+	private LoadBalancer loadBalancer;
+	@Resource//手写负载均衡算法，引入DiscoveryClient接口
+	private DiscoveryClient discoveryClient;
 	@GetMapping(value="/consumer/payment/create")//消费者无需知道端口，默认80，postman模拟get请求：http://localhost/consumer/payment/create?serial=zrh
 	public CommonResult<Payment>create(Payment p){
 		log.info("消费端开始get请求create");
@@ -77,4 +86,21 @@ public class OrderController {
 		return new CommonResult<Payment>(444,"操作失败");
 	
 	}
+	//手写负载均衡加
+	@GetMapping(value = "/consumer/payment/mylb")//http://localhost/consumber/payment/mylb
+	public String getPaymentLB() {
+		//如果是调用不同的服务，自定义负载均衡算法是很有心要的！
+		//通过discoveryClient获取服务名下的所有服务,这些服务启动类上有@EnableDiscoveryClient才能被发现！
+		List<ServiceInstance> instances = discoveryClient.getInstances("cloud-payment-server");
+		if(instances == null || instances.size() <= 0) {
+			return null;
+		}
+		//如果通过discoveryClient获取的服务实例集合不为空，则通过自定义的负载均衡轮询算法，获取有效的服务
+		//每次获取要调用的实例时，底层就是利用自旋锁和cas获取的服务实例下标...
+		//高并发的情况下，i++无法保证原子性，往往会出现问题，所以引入AtomicInteger类。
+		ServiceInstance serviceInstance = loadBalancer.getInstanceByLX(instances);
+		URI uri = serviceInstance.getUri();//自定义轮询后获得的服务实例
+		return restTemplate.getForObject(uri+"/payment/mylb", String.class);//利用restTemplate实现远程服务调用
+	}
+	
 }
