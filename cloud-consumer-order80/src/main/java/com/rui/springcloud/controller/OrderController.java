@@ -2,6 +2,7 @@ package com.rui.springcloud.controller;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,16 +48,33 @@ public class OrderController {
 	//public static final String PAYMENT_URL = "http://localhost:8001";//单机版暂时使用固定的服务地址
 	public static final String PAYMENT_URL ="http://cloud-payment-service";//（服务名称大小写都可以吗?）集群版使用服务调用访问时，只认在注册中心对外显露注册的服务名称(spring.application.name值)，与ip和端口号无关
 	@Resource//在Config中配置，再在此注入
+	
 	private RestTemplate restTemplate;//使用RestTemplate进行rest风格的服务调用
+	
 	@GetMapping(value="/consumer/payment/create")//消费者无需知道端口，默认80，postman模拟get请求：http://localhost/consumer/payment/create?serial=zrh
 	public CommonResult<Payment>create(Payment p){
 		log.info("消费端开始get请求create");
 		//这里有个问题，请求到服务提供者时，实体为null，什么原因? 服务提供者实体前没有加@RequestBody
 		return restTemplate.postForObject(PAYMENT_URL+"/payment/create",p ,CommonResult.class);
-	}
+		}
+	
 	@GetMapping(value="/consumer/get/{id}")//消费者无需知道端口，默认80，postman模拟get请求：http://localhost/consumer/get/4
 	public CommonResult<Payment>getPayment(@PathVariable("id")Long id){
 		log.info("消费端开始get请求");
 		return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id, CommonResult.class);
+	}
+	//getForObject()返回对象为响应体中数据转换的对象，基本上可以理解为json
+	//getForEntity()返回对象为ResponseEntity对象，包含了响应中的一些重要信息，比如headers响应头、status状态码、body响应体
+	//可以通过getBody()获取 
+
+	@GetMapping(value="/consumer/getForEntity/{id}")//http://localhost/consumer/getForEntity/4
+	public CommonResult<Payment>getPayment2(@PathVariable("id")Long id){
+		 ResponseEntity<CommonResult> entity = restTemplate.getForEntity(PAYMENT_URL+"/payment/get/"+id, CommonResult.class);
+		if(entity.getStatusCode().is2xxSuccessful()) {//返回成功
+			log.info("消费端开始get请求:"+entity.getStatusCodeValue()+"\t"+entity.getHeaders());
+			return entity.getBody();
+		}
+		return new CommonResult<Payment>(444,"操作失败");
+	
 	}
 }
