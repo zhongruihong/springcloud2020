@@ -3,6 +3,11 @@
 #实质：在key服务名，取value调用地址。消费者获得调用地址后，底层实际是利用httpClient实现远程调用
 #默认每隔30秒更新一次服务调用地址
 #RPC远程服务核心：高可用->注册中心集群：负载均衡、故障容错
+#Eureka保护模式 :Eureka Server会尝试保护其服务注册表中的信息，不再删除服务注册表中的数据，不会注销任何微服务。就是在注册中心页面经常看到的红字：EMERGENCY!...
+#即某时刻某一个服务不可用，Eureka不会立刻清理，依旧会对其信息进行保护，属于CAP中的AP
+#默认情况下，EurekaClient定时（30秒）向EurekaServer发送心跳包
+#一定时间（默认90秒）没有收到心跳包，会直接从服务注册表中剔除该服务
+#禁止自我保护：
 server:
   port: 7001 #eureka注册中心端口默认是8761
   
@@ -10,5 +15,8 @@ eureka:  instance:    hostname: eureka1.rui.com #eureka实例名称，除local
   client:    register-with-eureka: false #false 不向服务中心注册自己
     fetch-registry: false #false 表示 自己就是注册中心！不需要去检索服务
     service-url:
-      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defaultZone: http://eureka2.rui.com:7002/eureka/ #集群相互注册
+      #设置与eureka server（本项目就是注册中心）交互的地址，对外显露，其他项目查询服务和注册服务都依赖该地址      defalutZone: http://eureka1.rui.com:7001/eureka/ #单机注册
+      #defaultZone: http://eureka2.rui.com:7002/eureka/ #集群相互注册
       #浏览器访问：http://eureka2.rui.com:7001/   http://eureka2.rui.com:7002/ http://eureka1.rui.com:7001/   http://eureka1.rui.com:7002/
+  server:    enable-self-preservation: false #禁用自我保护模式 ，默认开启 访问注册中心显示红字：THE SELF PRESERVATION MODE IS TURNED OFF. ...
+    eviction-interval-timer-in-ms: 2000 #心跳检测时间改为2秒，默认90秒
