@@ -1,0 +1,23 @@
+#hystirx客户端(消费端)、服务端口都加，但一般加在客户端(消费端)
+server:
+  port: 80
+
+spring:  application:    name: cloud-order-hystrix-service
+
+eureka:
+  client:
+    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:
+      #defaultZone: http://localhost:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:
+    instance-id: order80 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
+#消费方去调服务提供方时，服务方业务处理有时间差，会超时报错。约定业务调用时间
+#设置Feign客户端超时时间（openfeign默认支持ribbon）
+#ribbon默认1秒得不到就会认为超时报错！
+ribbon:
+  ReadTimeout: 5000 #建立连接所用的时间，适用于网络情况正常时，两端连接所用时间 5秒
+  ConnectTimeout: 5000 #建立连接后从服务端读取到可用资源所用的时间 5秒
+#没有这两个 属性的自动提示！

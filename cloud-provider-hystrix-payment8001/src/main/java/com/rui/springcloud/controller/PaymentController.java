@@ -32,9 +32,9 @@ public class PaymentController {
 	// http://localhost:8001/payment/hystrix/timeout/10 正常访问
 	@GetMapping(value = "/payment/hystrix/timeout/{id}")
 	public String paymentInfo_TimeOut(@PathVariable("id") Integer id) {
-		String paymentInfo_OK = paymentService.paymentInfo_TimeOut(id);
-		log.info(paymentInfo_OK);
-		return paymentInfo_OK;
+		String paymentInfo_TimeOut = paymentService.paymentInfo_TimeOut(id);
+		log.info(paymentInfo_TimeOut);
+		return paymentInfo_TimeOut;
 
 	}
 	//jmeter下载地址： http://jmeter.apache.org/download_jmeter.cgi

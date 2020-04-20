@@ -18,7 +18,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	public String paymentInfo_TimeOut(Integer id) {
 		try {
-			int time = 4;//模拟耗时4秒
+			int time = id;//模拟耗时id秒
 			TimeUnit.SECONDS.sleep(time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
