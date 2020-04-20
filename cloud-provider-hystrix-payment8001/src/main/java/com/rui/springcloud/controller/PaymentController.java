@@ -37,4 +37,14 @@ public class PaymentController {
 		return paymentInfo_OK;
 
 	}
+	//jmeter下载地址： http://jmeter.apache.org/download_jmeter.cgi
+	//双击bin目录下的jmeter.bat  Options->Choose Language->Chinese （Simplified）
+	//添加本次测试计划 （右键-->添加-->Threads（Users）-->线程组）
+	//设置线程数 （所谓线程数就是并发用户数）:200、循环次数:100，保存。200*100就是两万个并发！
+	//右键->添加->取样器->HTTP请求，添加协议及相关配置信息（保存）：
+	//ip:localhost，端口：8001，方法：get，路径：http://localhost:8001/payment/hystrix/timeout/5
+	//启动测试
+	//分别在浏览器访问：http://localhost:8001/payment/hystrix/ok/5   http://localhost:8001/payment/hystrix/timeout/5
+	//看ok方法是否卡顿
+	
 }
