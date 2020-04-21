@@ -5,8 +5,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.rui.springcloud.service.impl.PaymentFallbackServiceImpl;
+
 @Component
-@FeignClient(value = "cloud-payment-hystrix-service")//这里调用的是有hystrix的服务~
+@FeignClient(value = "cloud-payment-hystrix-service",fallback = PaymentFallbackServiceImpl.class)//这里调用的是有hystrix的服务~
+//fallback属性设置feign客户端调用远程服务出错时的回调处理类，实现feign客户端接口，远程调用接口出错时进行对应的实现方法
 //openfeign实现：  业务逻辑接口（和provider的controller层一一对应）+@FeignClient配置调用provider服务(provider服务在eureka中注册的application.name值 )
 //该feign接口在自身的controller层注入供调用
 public interface PaymentFeignHystrixService {

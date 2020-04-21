@@ -2,6 +2,7 @@ package com.rui.springcloud.controller;
 
 import javax.annotation.Resource;
 
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,8 @@ public class OrderFeignHystrixController {
 		@HystrixProperty(name= "execution.isolation.thread.timeoutInMilliseconds",value = "3000")
 	})
 */
-	@HystrixCommand//注解掉原来专门的回调设置，使用@HystrixCommand表示要hystrix处理，此时走的是全局的处理！
+	//@HystrixCommand//注解掉原来专门的回调设置，使用@HystrixCommand表示要hystrix处理，此时走的是全局的处理！
+	//注释掉方法上的@HystrixCommand，当feign远程调用出错时，走feign接口注解@FeignClient的fallback属性定义的实现类
 	//ps：有专门的回调设置就走专门的回调方法，没有就走@DefaultProperties设置的默认的回调方法
 	//前提是方法上方都要有@HystrixCommand注解
 	public String paymentInfo_TimeOut(@PathVariable("id")Long id) {
