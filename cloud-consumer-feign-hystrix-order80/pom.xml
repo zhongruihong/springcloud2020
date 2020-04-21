@@ -8,6 +8,11 @@
   <artifactId>cloud-consumer-feign-hystrix-order80</artifactId>
   <!-- 引入jar -->
 	<dependencies>
+		<!-- hystrix -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
 		<!-- openfeign -->
 		<!-- openfeign整合了ribbon，可以实现负载均衡 -->
 		<dependency>

@@ -21,6 +21,8 @@ ribbon:
   ReadTimeout: 5000 #建立连接所用的时间，适用于网络情况正常时，两端连接所用时间 5秒
   ConnectTimeout: 5000 #建立连接后从服务端读取到可用资源所用的时间 5秒
 #没有这两个 属性的自动提示！
+#微服务作为客户端（消费端），OpenFeign要想使用hystrix的熔断机制，需要在yml中开户！服务端使用hystrix不需要开户，因为服务端没有使用feign!
+feign:  hystrix:    enabled: true
 #http://github.com/Netflix/Hystrix
 #Hystrix是一个用于处理分布式系统延迟和容错的开源库。可以服务降级、服务熔断、接近实时的监控（图形化监控Hystrix Dashboard）。
 #目前停更进行维护。Hystrix is no longer in active development, and is currently in maintenance mode.
