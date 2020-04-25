@@ -1,0 +1,50 @@
+#Gateway提供统一的路由方式且基于Filter链路的方式提供网关基本功能：安全，监控/指标，限流，熔断，
+#Gateway基于Spring 5.0+Spring Boot 2.0和Project Reactor等开发
+#Gateway基于WebFlux框架实现，webflux的底层使用了高性能的Reactor模式(reactor-netty响应式编程组件)通信框架Netty
+#外部请求->负载均衡->网关->各微服务
+#Gateway与Zuul的区别:
+#1、SpringCloud Finchley正式版之前 ，推荐的网关是NetFlix的Zuul
+#Zuul 1.x基于阻塞I/O的API Gateway，基于Servlet2.5使用阻塞架构，不支持任何长连接，如WebSocket，
+#Zuul的设计模式和Nginx很像，每次I/O操作都是从工作线程选择一个执行，请求线程被阻塞到工作线程完成，区别是Nginx是C++实现，Zuul是java实现
+#而JVM本身会有第一次加载较慢的情况，使用Zuul性能相对较差。
+
+#SpringCloud 集成的Zuul版本采用Tomcat容器，使用的是传统的Servlet IO处理模型--> Servlet的生命周期问题！
+#Servlet是下简单的网络IO模型，当请求进行servlet 容器时，它就会为请求绑定一个线程，在并发不高的情况下这种模型是可以的
+#但高并发线程数据会上涨 ，而线程资源的代价昂贵：上下文切换内存消耗大，严重影响请求处理时间
+#在一些简单业务场景下，不希望每个request请求分配一个线程，只需要一个或者几个线程就能应对极大的并发请求，这种业务场景下servlet模型没有优势！
+#所以Zuul 1.x是基于servlet的一个阻塞式处理模型，即处理所有request请求的一个servlet(DispatcherServlet)，并由该阻塞式处理
+#所以SpringCloud zuul无法摆脱servlet模型弊端
+
+#2、Gateway是异步非阻塞（基于webflux），支持WebSocket
+#传统的web框架，如struts2,springmvc都是基于Servlet API与Servlet容器之上运行的！
+#但Servlet3.1之后有了异步非阻塞的支持，webflux是一个完全的非阻塞异步响应式框架，不需要依赖Servlet API其核心主是基于Reactor（响应式流规范）的相关API实现
+#它可以运行在Netty，Undertow以及支持Servlet3.1的容器上。非阻塞+函数式编程
+#spring-cloud-starter-webflux
+#   spring-cloud-starter-reactor-netty
+
+#Gateway工作流程：
+#Route 路由：id+uri，一系列断言和过滤器组成，如果断言为true则匹配该路由
+#Predicate断言（匹配条件）：参考java8，可以匹配http请求中的所有内容（如请求头和请求参数），如果 请求与断言匹配则进行路由
+#Filter过滤器（拦截器）：GatewayFilter实例，使用过滤器，可以在请求被 路由器或者之后对请求进行修改
+
+server:
+  port: 9527
+
+eureka:
+  client:
+    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:
+      #defaultZone: http://localhost:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:
+    instance-id: gateway9527 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
+
+spring:
+  application:
+    name: cloud-gateway-service
+  cloud:    gateway:      routes: ###############添加网关路由规则 ##################      - id: payment_routh #路由id，无固定规则，但要求唯一，建议配合服务名
+        uri: http://localhost:8001 #断言为true(路径匹配成功后)，提供的转发服务
+        predicates:        - Path=/payment/get/** #断言，和该路径相匹配的请求（如：http://localhost:9527/payment/get/1）进行路由转发到uri
+#注意：Path首字母大写，且Path后面的等号前后没有空格
