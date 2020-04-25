@@ -51,5 +51,32 @@ spring:
         #uri: http://localhost:8001 #断言为true(路径匹配成功后)，提供的转发服务
         uri: lb://cloud-payment-service #微服务名称，spring.application.name值   测试地址，看是否成功http://localhost:9527/payment/get/5
         predicates:        - Path=/payment/get/** #断言，和该路径相匹配的请求（如：http://localhost:9527/payment/get/1）进行路由转发到uri
-#注意：Path首字母大写，且Path后面的等号前后没有空格
+#        - After=2020-04-26T18:52:23.136+08:00[Asia/Shanghai] #这个时间之后 上述的Path访问才生效，在这之前访问就会报Whitelabel Error Page404
+#        - Before=2020-04-26T18:52:23.136+08:00[Asia/Shanghai] #这个时间之前 上述的Path访问才生效，在这之后访问就会报Whitelabel Error Page404
+#        - After=2020-04-26T18:52:23.136+08:00[Asia/Shanghai],2020-04-27T18:52:23.136+08:00[Asia/Shanghai] #这个时间之间 上述的Path访问才生效，在这之外访问就会报Whitelabel Error Page404
+#        - Cookie=username,zrh #cookie键值对  cmd利用curl进行访问，不带cookie访问：curl http://localhost:9527/payment/get/3  报错："status":404,"error":"Not Found","message":null,"...
+          #带cookie访问：curl http://localhost:9527/payment/get/3 --cookie "username=zrh"
+#        - Header=X-Request-Id,\d+ #请求头要有X-Request-Id属性，并且值 为整数的正则表达式
+        - Method=GET #get请求才允许访问
+        - Query=username,\d+ #要有参数username并且值 还是整数才路由  http://localhost:9527/payment/get/3?username=123
+        #测试：curl http://localhost:9527/payment/get/3 -H "X-Request-Id:123"
+#注意：predicates策略的首字母大写，且后面的等号前后没有空格
+#每次设置Predicates之后要重启才生效，热部署不生效~
 #默认情况下gateway会根据注册中心的服务列表，以注册中心上微服务名为路径创建动态路由进行转发，实现动态路由功能
+
+#路由配置类型11种Loaded RoutePredicateFactory：
+#参考官网怎么配置：https://cloud.spring.io/spring-cloud-static/spring-cloud-gateway/2.2.2.RELEASE/reference/html/
+#To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+# [After]
+#[Before]
+#[Between]
+#[Cookie]
+#[Header]
+#[Host]
+#[Method]
+#[Path]
+#[Query]
+#[ReadBodyPredicateFactory]
+#[RemoteAddr]
+#[Weight]
+#[CloudFoundryRouteService]
