@@ -50,6 +50,8 @@ spring:
           enabled: true #开启从注册中心动态创建路由的功能，利用服务名进行路由！ps:其实不用开启，默认是开启的~      routes: ###############添加网关路由规则 ##################      - id: payment_routh #路由id，无固定规则，但要求唯一，建议配合服务名
         #uri: http://localhost:8001 #断言为true(路径匹配成功后)，提供的转发服务
         uri: lb://cloud-payment-service #微服务名称，spring.application.name值   测试地址，看是否成功http://localhost:9527/payment/get/5
+#        filters:
+#        - AddRequestParameter=X-Request-Id,1024 #过滤器工厂会在匹配的请求头加上一对请求，名称为X-Request-Id，值 为1024
         predicates:        - Path=/payment/get/** #断言，和该路径相匹配的请求（如：http://localhost:9527/payment/get/1）进行路由转发到uri
 #        - After=2020-04-26T18:52:23.136+08:00[Asia/Shanghai] #这个时间之后 上述的Path访问才生效，在这之前访问就会报Whitelabel Error Page404
 #        - Before=2020-04-26T18:52:23.136+08:00[Asia/Shanghai] #这个时间之前 上述的Path访问才生效，在这之后访问就会报Whitelabel Error Page404
@@ -58,7 +60,7 @@ spring:
           #带cookie访问：curl http://localhost:9527/payment/get/3 --cookie "username=zrh"
 #        - Header=X-Request-Id,\d+ #请求头要有X-Request-Id属性，并且值 为整数的正则表达式
         - Method=GET #get请求才允许访问
-        - Query=username,\d+ #要有参数username并且值 还是整数才路由  http://localhost:9527/payment/get/3?username=123
+#        - Query=username,\d+ #要有参数username并且值 还是整数才路由  http://localhost:9527/payment/get/3?username=123
         #测试：curl http://localhost:9527/payment/get/3 -H "X-Request-Id:123"
 #注意：predicates策略的首字母大写，且后面的等号前后没有空格
 #每次设置Predicates之后要重启才生效，热部署不生效~
