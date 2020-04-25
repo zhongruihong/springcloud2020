@@ -44,7 +44,12 @@ eureka:
 spring:
   application:
     name: cloud-gateway-service
-  cloud:    gateway:      routes: ###############添加网关路由规则 ##################      - id: payment_routh #路由id，无固定规则，但要求唯一，建议配合服务名
-        uri: http://localhost:8001 #断言为true(路径匹配成功后)，提供的转发服务
+  cloud:    gateway:
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能，利用服务名进行路由！ps:其实不用开启，默认是开启的~      routes: ###############添加网关路由规则 ##################      - id: payment_routh #路由id，无固定规则，但要求唯一，建议配合服务名
+        #uri: http://localhost:8001 #断言为true(路径匹配成功后)，提供的转发服务
+        uri: lb://cloud-payment-service #微服务名称，spring.application.name值   测试地址，看是否成功http://localhost:9527/payment/get/5
         predicates:        - Path=/payment/get/** #断言，和该路径相匹配的请求（如：http://localhost:9527/payment/get/1）进行路由转发到uri
 #注意：Path首字母大写，且Path后面的等号前后没有空格
+#默认情况下gateway会根据注册中心的服务列表，以注册中心上微服务名为路径创建动态路由进行转发，实现动态路由功能
