@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@HystrixCommand(fallbackMethod = "paymentCircuitBreaker_fallback",commandProperties= {//以下配置参考HystrixCommandProperties.java很多默认属性值，自己没有通过注解配置参数，就使用该类默认的值
 		@HystrixProperty(name = "circuitBreaker.enabled",value = "true"),//是否开启断路器
 		@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold",value = "10"),//请求峰值次数
-		@HystrixProperty(name = "circuitBreaker.sleepWindowInmilliseconds",value = "10000"),///时间窗口期、时间范围,半开状态。。窗口期open后，继续尝试调用，看是否恢复
+		@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds",value = "10000"),///时间窗口期、时间范围,半开状态。。窗口期open后，继续尝试调用，看是否恢复
 		@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage",value = "60")//失败率(此处为60%)，达到或者超过就断路 
 	}
 	)
@@ -80,5 +80,5 @@ public class PaymentServiceImpl implements PaymentService {
 	public String paymentCircuitBreaker_fallback(@PathVariable("id")Integer id) {
 		return "id不能为负数 ";
 	}
-	
+	//微服务太多，看log恼火，看图形化界面...DashBoard仪表盘
 }
