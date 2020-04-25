@@ -47,4 +47,16 @@ public class PaymentController {
 	//分别在浏览器访问：http://localhost:8001/payment/hystrix/ok/5   http://localhost:8001/payment/hystrix/timeout/5
 	//看ok方法是否卡顿
 	
+	//****************服务降级->服务熔断->服务恢复调用链路
+	
+	//http://localhost:8001/payment/circuit/1  正数正常
+	//http://localhost:8001/payment/circuit/-1 负数抛异常 回调方法
+	//http://localhost:8001/payment/circuit/-1 访问很多次（此例为10次）之后（一直负数刷新页面），就算输入正值（http://localhost:8001/payment/circuit/正数）访问，也不会打开正常页面
+	@GetMapping("/payment/circuit/{id}")
+	public String paymentCircuitBreaker(@PathVariable("id") Integer id) {
+		String result = paymentService.paymentCircuitBreaker(id);
+		log.info(result);
+		return result;
+	}
+	
 }
