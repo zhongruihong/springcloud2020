@@ -1,0 +1,61 @@
+#多个工程，统一管理，集中配置，多个application.xml一个一个的改太麻烦！
+#一个yml配置文件不满足多种情况使用：prod,test,dev,beta,release，运行期间动态调整配置，不再需要在每个服务部署
+#的机器 上编写配置文件，服务会向配置中心统一拉取配置自己的信息，当配置发生变动时，服务不需要重启就可以感知到配置的变化并应用新的配置！
+#将配置信息以REST接口的形式显露，与GitHub整合配置，使用的是http/https访问的形式
+#SpringCloud ConfigServer为微服务提供集中化的外部配置支持，配置服务器为多个不同微服务的所有环境提供一个中心化的外部配置。
+#统一共用的配置放在ConfigServer，独有的配置在各自的项目中。
+#ConfigServer分为服务端和客户端
+#【服务端】也称为分布式配置中心，它是一个独立的微服务应用，用来连接配置服务器并为客户端提供获取配置信息，加密、解密信息等访问接口
+#【客户端】是通过指定的配置中心来管理应用资源，以及与业务相关的配置内容，并在启动的时候从配置中心获取和加载配置信息，
+#配置服务器默认采用git来存储配置信息，有助于对环境配置进行版本管理，并可以通过git客户端工具来方便的管理和访问配置内容。
+#github->本地->ConfigServer->各微服务
+#版本切换方便，一次配置，多处使用
+
+#注意要修改windows下的hosts文件(C:\Windows\System32\drivers\etc\hosts)，增加映射 。。。。eureka服务中心也映射了的~
+#注意刷新生效ipconfig/flushdns?
+#127.0.0.1  configserver.rui.com
+#127.0.0.1  clientconfig.rui.com
+#本项目启动后可以通过 访问http://configserver.rui.com:3344/master/config2020-dev.yml
+
+server:
+  port: 3344
+  
+eureka:  client:    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:      #defaultZone: http://eureka1.rui.com:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:
+    instance-id: configserver3344 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
+    #心跳检测与续约时间，开发时设置小些，保证服务关闭后注册中心能立即剔除服务！
+    lease-renewal-interval-in-seconds: 1 #Eureka客户端向服务发送心跳的时间间隔，默认30秒
+    lease-expiration-duration-in-seconds: 2 #Eureka服务端在收到最后一次心中后等待时间上限，默认90秒，超过该时间将剔除服务
+spring:
+  application:
+    name: cloud-config-center #注册到注册中心的应用名称【application】对外显露调用， 在相同应用名称下可能有多个实际应用提供，可通过访问注册中心查看
+  cloud:    config:      server:        git:#          uri: git@github.com:zhongruihong/springcloud-config.git  #用shh要报错的,还是用http访问吧~：reject HostKey: github.com
+          uri: https://github.com/zhongruihong/springcloud-config
+          #在上述uri路径下搜索目录和分支，就是进入git上配置文件所在的页面！
+          search-paths: 
+          #搜索目录          - springcloud-config 
+          #读取的分支
+        default-label: master 
+#    
+#HTTP服务具有以下形式的资源：
+#/{application}/{profile}[/{label}]
+#/{application}-{profile}.yml
+#/{label}/{application}-{profile}.yml
+#/{application}-{profile}.properties
+#/{label}/{application}-{profile}.properties
+#其中application作为SpringApplication中的spring.config.name注入（通常是常规spring引导应用程序中的应用程序），
+#profile是活动的profile（或以逗号分隔的属性列表），label是可选的git标签（默认为master）
+#如果访问路径没有{label},默认访问的是maser路径下的配置文件！
+
+#例如：http://configserver.rui.com:3344/master/config2020-dev.yml中的/master/config2020-dev.yml，
+#其中"master"是{label}分支名，"config2020"是{application}应用名称,"dev"是{profile}
+#如果目录下还有application.yml文件，且配置了test、dev等，会根据市访问路径中的{profile}去加载application中的相关配置！
+#如果访问:http://configserver.rui.com:3344/master/config2020-test.yml,但github相关目录下没有config2020-test.yml文件，会去找目录下的application.yml中的对应的{profile}配置信息??????
+
+#访问http://configserver.rui.com:3344/config2020-xxx.yml时（github上没有config2020-xxx.yml），返回的是apppcalition.yml中第一个"---"之前的内容？！！！
+
+        
