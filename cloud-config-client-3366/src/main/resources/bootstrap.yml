@@ -1,19 +1,26 @@
-#bootstrap是系统级，优先加载
-#SpringCloud会创建一个"BootStrap Context"，作为Spring应用的ApplicationContext的父上下文
-#初始化时，BootStrapContext负责从【外部源】加载配置并解析配置。
-#这两个上下文共享一个从【外部获取的】Environment!
-#默认情况下，BootStrap不会被本地覆盖。
-#引入bootstrap.yml保证Bootstrap Context和ApplicationContext配置的分离
-
+#Spring Cloud Bus配置Spring Cloud Config使用实现配置的动态刷新 
+#Spring Cloud Bus是用来将分布式系统的节点与轻量级消息系统链接起来的框架
+#整合了java的【事件处理机制】和【消息中间件】如RabbitMQ、Kafka的功能。
+#Spring Cloud Bus目前支持消两种消息代理：RabbitMQ和Kafka
+#Spring Cloud Bus能实现管理和传播分布式系统间的消息，就像一个广播器，
+#可用于广播状态更改、事件推送等，也可以当作微服务间的通信通道
+#总线：在微服务架构系统 中，通常会使用轻量级的消息代理来构建一个共用的消息主题
+#并让系统中所有微服务实力都连接上来，由于该主题中产生的消息会批号从所有实例监听和消费
+#所以称其为消息总线，
+#在总线上的各个实例，都可以方便地广播一些需要让其他连接在该主题上的实例都知道的消息
+#
+#基本原理：ConfigClient实例都监听MQ中同一个topic(默认是SpringClod Bus)
+#当一个服务刷新数据时，它会把这个信息放入到topic中，这样其他监听同一个topic的服务就能得到通知，
+#然后去更新自身的配置。
 server:
-  port: 3355
+  port: 3366
   
 eureka:  client:    register-with-eureka: true #将自己【服务提供者】注册进eureka server
     fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
     service-url:      #defaultZone: http://eureka1.rui.com:7001/eureka #单机版 注册地址 
       defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
   instance:
-    instance-id: configclient3355 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    instance-id: configclient3366 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
     prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
     #心跳检测与续约时间，开发时设置小些，保证服务关闭后注册中心能立即剔除服务！
     lease-renewal-interval-in-seconds: 1 #Eureka客户端向服务发送心跳的时间间隔，默认30秒

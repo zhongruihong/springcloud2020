@@ -10,6 +10,11 @@
 	<artifactId>cloud-config-center-3344</artifactId>
 	<!-- 引入jar -->
 	<dependencies>
+		<!-- 消息总线的RabbitMQ支持：bus-amqp   bus和mq都有了...-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
+		</dependency>
 		<!-- config client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

@@ -58,4 +58,9 @@ spring:
 
 #访问http://configserver.rui.com:3344/config2020-xxx.yml时（github上没有config2020-xxx.yml），返回的是apppcalition.yml中第一个"---"之前的内容？！！！
 
-        
+#rabbit相关配置  前提是安装了RabbitMQ环境  rabbitmq:    host: localhost
+    port: 5672 #rabbit默认端口....rabbitmq 服务端口是5672!!!! 15672是其客户端插件的端口!!!
+    username: guest #rabbit控制台默认用户
+    password: guest
+#rabbit相关配置，暴露bus刷新配置的端点
+management:  endpoints:    web:      exposure:        include:        - "bus-refresh"  #rabbitmq刷新相关  post   /bus/refresh

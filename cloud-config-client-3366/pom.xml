@@ -7,7 +7,7 @@
 		<artifactId>spingcloud2020</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>cloud-config-center-3344</artifactId>
+	<artifactId>cloud-config-client-3366</artifactId>
 	<!-- 引入jar -->
 	<dependencies>
 		<!-- 消息总线的RabbitMQ支持：bus-amqp   bus和mq都有了...-->
@@ -15,10 +15,10 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
 		</dependency>
-		<!-- config server -->
+		<!-- config client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-config-server</artifactId>
+			<artifactId>spring-cloud-starter-config</artifactId><!-- 注意：starter-config不是config-server,而且config-server前面没有starter -->
 		</dependency>
 		<!-- eureka client -->
 		<dependency>
@@ -42,37 +42,25 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!-- 注意：如果pom.xml中引入了和数据库连接相关的包，如：【jdbc】、【mysql】、【oracle】、【mybatis】、【druid】等，
-				而application.yml中却没有配置数据源，会去加载数据源，没有找到相关配置会报以下错误以及引起的相关错误：
-				Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
-				Reason: Failed to determine a suitable driver class
-		-->
+		<!-- 注意：如果pom.xml中引入了和数据库连接相关的包，如：【jdbc】、【mysql】、【oracle】、【mybatis】、【druid】等， 
+			而application.yml中却没有配置数据源，会去加载数据源，没有找到相关配置会报以下错误以及引起的相关错误： Failed to configure 
+			a DataSource: 'url' attribute is not specified and no embedded datasource 
+			could be configured. Reason: Failed to determine a suitable driver class -->
 		<!-- jdbc -->
-		<!-- <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-jdbc</artifactId> 
+			</dependency> -->
 		<!--mysql -->
-		<!-- <dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+			</dependency> -->
 		<!-- oracle -->
-		<!-- <dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>com.oracle</groupId> <artifactId>ojdbc6</artifactId> 
+			</dependency> -->
 		<!-- mybatis -->
-		<!-- <dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.mybatis.spring.boot</groupId> <artifactId>mybatis-spring-boot-starter</artifactId> 
+			</dependency> -->
 		<!-- druid -->
-		<!-- <dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>1.1.10</version>好像父工程没有，只能自己引入
-		</dependency> -->
+		<!-- <dependency> <groupId>com.alibaba</groupId> <artifactId>druid-spring-boot-starter</artifactId> 
+			<version>1.1.10</version>好像父工程没有，只能自己引入 </dependency> -->
 		<!-- devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
