@@ -1,10 +1,12 @@
 package com.rui.springcloud.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RefreshScope//配置文件自动刷新，实现配置、实例热加载
 public class ConfigClientController {
 	@Value("${test.info}")//配置信息以Rest风格显露  从3344配置中心读取config.info的内容！
 	//注意:本项目bootstrap.yml中配置的配置中心地址中访问路径下的配置文件中（http://localhsot:3344/master/config2020-dev.yml）

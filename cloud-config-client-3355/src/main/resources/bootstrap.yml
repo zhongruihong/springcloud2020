@@ -29,3 +29,17 @@ spring:
       uri: http://localhost:3344 #config server配置中心地址
 #http://localhsot:3344/master/config2020-dev.yml
 #通过访问服务中心3344获取配置信息~
+
+
+
+#暴露监控端口   pom.xml要引入 actuator!!!
+#详情：https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints
+management:  endpoints:    web:      exposure:
+      #例如，通过HTTP公开info和health的端点，除了env和beans端点，#        include:#        - "info"
+#        - "health" 
+#       #不暴露beans和env端点
+#        exclude:#        - env
+#        - beans #打不打引号都可以?
+#以上配置都是默认的~~~~~"*" 可以用来表示所有的端点，
+         include:
+         - "*"
