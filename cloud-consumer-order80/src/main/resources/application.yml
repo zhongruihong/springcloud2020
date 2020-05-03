@@ -17,7 +17,29 @@ server:
   port: 80
 
 spring:  application:    name: cloud-order-service
-
+#zipkin监控链路调用：
+  zipkin:
+    base-url: http://localhost:9411  #前提：要启动zipkin的jar
+#sleuth采样值介于0-1之间，1表示 全部采集
+  sleuth:
+    sampler:
+      probability: 1
+#在微服务框架中，一个由客户发起的请求在后端系统中会经过多个不同的服务节点调用来协同产生最后的请求结果，
+#每一个前段请求都会形成一条复杂的分布式服务调用链路，链路中的任何一环出现高延时或者错误都会引起整个请求最后的失败
+#Spring Cloud Sleuth提供了一套完整的服务跟踪解决方案，兼容支持zipkin，一个监控，一个展现（zipkin Dashboard）
+#搭建链路监控步骤：
+#SpringCloud F版起就不需要自己构建Zipkin Server，只需要调用jar包即可：
+#https://dl.bintray.com/openzipkin/maven/io/zipkin/java/zipkin-server/
+#zipkin-server-2.12.9-exec.jar
+#直接cmd运行  java -jar ./zipkin-server-2.12.9-exec.jar
+#访问：http://localhost:9411/
+#
+#Trace:类似于树结构的Span集合，表示一条调用链路，存在唯一标识 
+#Span:表示 调用链路来源，通俗理解为span就是一次请求信息
+#
+#配置需要监控的服务yml:zipkin配置
+#依次启动注册中心/8001/80（打开注解@LoadBalanced获取RestTemplate）
+#访问http://localhost/consumer/get/2
 eureka:
   client:
     register-with-eureka: true #将自己【服务提供者】注册进eureka server

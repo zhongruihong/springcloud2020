@@ -8,6 +8,11 @@
   <artifactId>cloud-consumer-order80</artifactId>
 <!-- 引入jar -->
 	<dependencies>
+		<!-- sleuth+zipkin -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
 		<!-- eureka client -->
 		<!-- 消费者也是一种eureka客户端 -->
 		<dependency>
