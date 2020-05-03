@@ -18,8 +18,8 @@ spring:  application:    name: cloud-stream-provider
                 username: guest
                 password: guest
                 virtual-host: / #默认就是"/"...
-#================中间件服务配置=================                      bindings: #服务的整合处理        myOutput: #自己定义的通道名名称
-          destination: myExchange #使用的目的地Exchange名称
+#================中间件服务配置=================                      bindings: #服务的整合处理        output: #output表示该服务是消息提供者~反之，input表示服务是消息消费者...一定要写对~~~
+          destination: myExchange #使用的目的地Exchange名称~~~消息消费者服务中和此处的通道名一样!
           content-type: appliation/json #设置消息类型，本次为json，文本设置为"text/plain"
           binder: mypro-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称              
 
