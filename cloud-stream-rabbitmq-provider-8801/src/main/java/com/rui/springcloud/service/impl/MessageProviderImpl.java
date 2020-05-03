@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MessageProviderImpl implements ImessageProvider{
 
 	@Resource
-	private MessageChannel output;//消息发送通道！！
+	private MessageChannel output;//消息发送通道！！ MessageChannel变量名只能是output??????否则项目启动都报错!!!!!!
 	
 	@Override
 	public String send() {
