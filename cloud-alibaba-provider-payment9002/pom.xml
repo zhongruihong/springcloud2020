@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.rui.springcloud</groupId>
+    <artifactId>spingcloud2020</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>cloud-alibaba-provider-payment9002</artifactId>
+<!-- 引入jar -->
+	<dependencies>
+		<!-- alibaba nacos -->
+		<!-- 注意：组合已经变成 com.alibaba.cloud-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<!-- 自定义公共包，主要放公用实体等 -->
+		<dependency>
+			<groupId>com.rui.springcloud</groupId>
+			<artifactId>cloud-api-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- actuator -->
+		<!-- 和web永远绑一起，actuator涉及后面的图形化显示、坐标监控、图形处理、IP信息显示（如注册中心鼠标悬浮应用的status时，左下角显示ip） 、
+		服务健康检查：访问http://服务ip:端口号/actuator/health，可查看应用状态 ，返回json，如{"status":"UP"}
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- 注意：如果pom.xml中引入了和数据库连接相关的包，如：【jdbc】、【mysql】、【oracle】、【mybatis】、【druid】等，
+			而application.yml中却没有配置数据源，会去加载数据源，没有找到相关配置会报以下错误以及引起的相关错误：
+			Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+			Reason: Failed to determine a suitable driver class
+		-->
+		<!-- jdbc -->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency> -->
+		<!--mysql-->
+		<!-- <dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency> -->
+		<!-- oracle -->
+		<!-- <dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+		</dependency> -->
+		<!-- mybatis -->
+		<!-- <dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+		</dependency> -->
+		<!-- druid  -->
+		<!-- <dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.10</version>好像父工程没有，只能自己引入
+		</dependency> -->
+		<!-- devtools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional><!-- true:其子项目不是必须依赖，避免子项目最终打包包含不必要的依赖；如果子项目要依赖，自己显示依赖即可  -->
+			<!-- 不写<optional>时默认的值为false，其子项目必须依赖该项目 ，如果其子项目不需要依赖该项，则使用：
+				<dependency>
+					<groupId>
+					<artifactId>
+					<exclusions>
+						<exclusion>
+							<groupId>
+							<artifactId>
+			-->
+		</dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
