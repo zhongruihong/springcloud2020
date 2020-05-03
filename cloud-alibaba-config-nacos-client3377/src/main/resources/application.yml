@@ -2,4 +2,29 @@ spring:
   profiles:
     active: dev #表示开发环境
     #代表本配置中心要去8848拉取dev的配置文件~
+    
+#
+#【Nacos和CAP】:支持CP和AP切换
+#C:一致性。所有节点在同一时间看到的数据都是一致的
+#A:高可用。所有请求都会收到响应
+#P:
+#一般来说，
+#如果不不需要存储服务级别的信息且服务实例是通过Nacos-client注册，
+#并能够保持心跳上报 ，就可以选择AP模式，如SpingCloud和Dubbo服务,都适用AP模式。
+#AP模式为了服务的可能性而减弱了一致性，因此AP模式下只支持注册临时实例！
+#
+#如果需要在服务器级别编辑或者存储配置住得，那么CP是必须，K8S服务和DNS服务适用于CP模式。
+#CP模式下则支持注册持久化实例，此时则是以Raft协议为集群运行模式，该模式下注册实例之前
+#必须先注册服务，如果服务不存在，则返回错误
+#
+#Nacos切换方法,cmd执行：
+#curl -X POST "$NACOS_SERVER:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=CP"
+#或者
+#curl -X POST "$NACOS_SERVER:8848/nacos/v1/ns/operator/switches?entry=serverMode&value=AP"
+#
+#【Nacos服务发现实例模型】
+#临时实例->Eureka(AP)+Zookeeper(CP)    持久化实例->Consul(CP)
+#客户端上报健康状态                 服务端探测健康状态
+#排除不健康实例                 保留不健康实例
+#非持久化                  持久化
 #
