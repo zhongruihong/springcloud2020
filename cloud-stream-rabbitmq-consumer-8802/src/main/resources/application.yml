@@ -1,3 +1,20 @@
+#场景：订单系统做集群部署，都会从RabbitMQ中获取订单信息。
+#如果一个订单同时被两个服务获取，会造成数据错误。
+#解决：使用Stream中的消息分组。
+#注意：Stream中处于同一个group中的多个消费者都是竞争关系，
+#就能够保证消息只会被其中一个应用消费一次，不同级是可以全面消费的（重复消费的）
+#消费只能被消费一次的放在同一个组~~
+#重复消费的原因：
+#登录rabbit界面Quences导航可以查看多个消息消费方的各自的Name（相当于组流水号吧):通道名.anonymous.不同的序列号
+#所以默认分组group是不同的，组流水号不一样被 认为是不同组，都可以消费
+#
+#解决重复消费：
+#自定义配置分组，自定义分为同一个组
+#微服务应用放置在同一个group中，就能保证消息只会被同一个组中的某一个应用消费一次！
+#
+#分组->分同一个组
+#yml配置：group: namexxx
+
 server:
   port: 8802
   
@@ -17,7 +34,7 @@ spring:  application:    name: cloud-stream-consumer
 #================中间件服务配置=================                      bindings: #服务的整合处理        input: #定义消息消费端的名称~~~~这里必须是input?因为Sinl只有，Sink.INPUT?
           destination: myExchange #使用的目的地Exchange名称，要与消息提供方的通过名称一毛一样！
           content-type: application/json #设置消息类型，本次为json，文本设置为"text/plain"
-          binder: myconsumer-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称              
+          binder: myconsumer-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称          group: 8802 #设置分组  登录rabbit界面Quences导航可以查看此时的Name为：通道名.8802
 
 eureka:
   client:
