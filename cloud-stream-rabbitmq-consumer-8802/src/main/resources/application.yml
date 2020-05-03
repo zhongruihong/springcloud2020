@@ -34,7 +34,13 @@ spring:  application:    name: cloud-stream-consumer
 #================中间件服务配置=================                      bindings: #服务的整合处理        input: #定义消息消费端的名称~~~~这里必须是input?因为Sinl只有，Sink.INPUT?
           destination: myExchange #使用的目的地Exchange名称，要与消息提供方的通过名称一毛一样！
           content-type: application/json #设置消息类型，本次为json，文本设置为"text/plain"
-          binder: myconsumer-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称          group: consumer-group1 #设置分组  登录rabbit界面Quences导航可以查看此时的Name为：通道名.group值
+          binder: myconsumer-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称#持久化问题：
+#停止8802和8803，删除8802yml中的group配置，保留8803yml中的group配置
+#8801先发送4条消息到rabbitmq中(访问4次http://localhost:8801/sendmessage之后 再启动两个服务端看结果)，
+#启动8802（无分组属性配置），后台没有打印MQ上的消息，没有去MQ拿还没有被消费的消息---消息丢失...；
+#启动8803（有无分组属性配置），后台打印MQ上的消息
+
+#          group: consumer-group1 #设置分组  登录rabbit界面Quences导航可以查看此时的Name为：通道名.group值
 
 eureka:
   client:
