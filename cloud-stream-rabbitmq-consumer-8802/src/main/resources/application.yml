@@ -1,0 +1,71 @@
+server:
+  port: 8802
+  
+spring:  application:    name: cloud-stream-consumer
+   
+  cloud:
+#================中间件环境配置======================    stream:
+      binders:        myconsumer-Rabbit: # 自己定义的名称，用于bind整合
+          type: rabbit #消息组件的类型
+          environment: #设置消息组件的相关环境            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672 #再次强调15672是界面端口，5672是服务端口
+                username: guest
+                password: guest
+                virtual-host: / #默认就是"/"...
+#================中间件服务配置=================                      bindings: #服务的整合处理        input: #定义消息消费端的名称~~~~这里必须是input?因为Sinl只有，Sink.INPUT?
+          destination: myExchange #使用的目的地Exchange名称，要与消息提供方的通过名称一毛一样！
+          content-type: application/json #设置消息类型，本次为json，文本设置为"text/plain"
+          binder: myconsumer-Rabbit #设置要绑定的消息服务的具体设置,定义的binder名称              
+
+eureka:
+  client:
+    register-with-eureka: true #将自己【服务提供者】注册进eureka server
+    fetch-registry: true #是否从eureka server抓取已有的注册信息，单节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:
+      #defaultZone: http://eureka1.rui.com:7001/eureka #单机版 注册地址 
+      defaultZone: http://eureka1.rui.com:7001/eureka, http://eureka2.rui.com:7002/eureka #集群版，注册地址
+  instance:
+    instance-id: rabittmq-consumer8802 #规范主机名 ， 在注册中心的status中显示的名称；若不配置此项，status显示的是所在计算机名:应用名:端口
+    prefer-ip-address: true #访问路径可显示 IP地址，鼠标悬浮注册中心的status的主机名时，左下角显示对应的ip地址
+    #心跳检测与续约时间，开发时设置小些，保证服务关闭后注册中心能立即剔除服务！
+    lease-renewal-interval-in-seconds: 1 #Eureka客户端向服务发送心跳的时间间隔，默认30秒
+    lease-expiration-duration-in-seconds: 1 #Eureka服务端在收到最后一次心中后等待时间上限，默认90秒，超过该时间将剔除服务
+
+#1、标准MQ【消息中间件】:ActiveMQ、RabbitMQ、RocketMQ、Kafka
+#一定格式的消息发送->队列/主题->订阅者消费
+#生产者、消费者之间靠消息媒介传递信息内容Message,
+#消息必须走特定的通道：消息通道MessageChannel，
+#MessageChannel的子接口SubScribableChannel，由MessageHandler消息处理订阅
+#不同消息中间件构架上不同，比如：
+#RabbitMQ有exchange（交换机）,Kafka有Topic和Partitions分区
+#前VUE 中JAVAEE 后大数据
+#
+#2、Spring Cloud Stream【消息驱动】
+#如果中间JAVAEE用RabbitMQ ，大数据用Kafka， 切换、维护、开发难。
+#不再关注具体的MQ细节，只需要一种适配绑定的方式，自动的在各种MQ内切换~
+#Spring Cloud Stream【屏蔽底层中间件的差异 via Binder】，降低切换成本，统一消息的编程模型，解耦合~
+#比如mysql、oracle、sqlserver-》Hibernate不关注数据库类型~~~
+#Spring Cloud Stream是一个构建消息驱动微服务的框架，目前仅支持【RabbitMQ】、【Kafka】
+#引入了发布-订阅、消息组、分区的3个核心概念，
+#应用程序通过inputs(消息发送者)或者outputs（消息消费者）来与Spring Cloud Stream的绑定器对象Binder交互，
+#通过配置来binding(绑定)，【binder】负责与消息中间件交互，实现应用程序与消息中间件细节间的隔离
+#通过向应用程序暴露统一的【Channel】通道，使应用程序不需要考虑各种不同消息中间件的实现，
+#通过使用Spring 【Integration】来连接消息中间件以实现消息事件驱动
+#Stream中的消息通信方式遵循发布-订阅模式：Topic主题进行广播（RabbitMQ就是Exchange（交换机）,Kafka就是Topic）
+#绑定层->AMQP消息服务
+#https://www.springcloud.cc/spring-cloud-stream-zhcn.html
+#https://javadoc.io/doc/org.springframework.cloud/spring-cloud-stream/latest/index.html
+#
+#3、Stream标准流程
+#Binder:连接中间件，屏蔽差异
+#Channel:队列Queue的一种抽象 ，在消息通讯系统中就是实现存储和转发的媒介，通过Channel对队列进行配置
+#Source和Sink:消息输入、输出 
+#
+#4、Stream编程常用注解
+#
+#【@Input】 标识输入通道，通过该输入通道接收到的消息进入应用程序 
+#【@Output】 标识输出通道，发布的消息将通过该通道离开应用程序
+#【@StreamListener】 监听队列，用于消费者的队列的消息接收
+#【@EnableBinding】通道Channel和Exchange绑定在一起
