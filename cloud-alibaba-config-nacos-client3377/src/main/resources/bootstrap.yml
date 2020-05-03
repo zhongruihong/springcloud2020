@@ -13,7 +13,9 @@ spring:  application:    name: nacos-config-client #服务配置客户端
     #Nacos注册中心地址      discovery:        server-addr: localhost:8848  #注册中心地址
      #指定yaml格式的配置！！
       config:
-        server-addr: localhost:8848 #配置中心地址        file-extension: yaml  #目前只支持【 properties】 和 【yaml】 类型
+        server-addr: localhost:8848 #配置中心地址
+        namespace: 933315d4-0be0-46a9-8035-bc29f2073148
+        group: TEST_GROUP        file-extension: yaml  #目前只支持【 properties】 和 【yaml】 类型
      #通过以上配置，服务配置客户端3377可以去nacos注册中心8848上读取指定的配置文件：
 # ${spring.application.name}-${spring.profile.active}-${spring.cloud.nacos.config.file-extension}
 # 本项目yml上述配置，在nacos上对应的【Data ID】，即文件名为: nacos-config-client-dev.yaml  注意：后缀名是.yaml
